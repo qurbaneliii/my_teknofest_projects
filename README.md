@@ -45,19 +45,30 @@ Projects in this repository may include combinations of the following technologi
 ## 📁 Repository Structure
 
 my_teknofest_projects/
+
 │
 ├── SONIC/
+
 │ ├── docs/
+
 │ ├── src/
+
 │ ├── prototypes/
+
 │ └── README.md
+
 │
 ├── AgroScan/
+
 │ ├── docs/
+
 │ ├── datasets/
+
 │ ├── model/
+
 │ └── README.md
 │
+
 └── (Future Projects)
 ---
 
@@ -81,6 +92,7 @@ Updates will be added with new releases and development phases.
 If you're interested in collaborating or discussing the technology stack or research:
 
 📩 Email: qurbanelifeyzullayev@gmail.com 
+
 🌍 LinkedIn: linkedin.com/in/gurbanalifeyzullayev/
 
 ---
