@@ -48,24 +48,16 @@ my_teknofest_projects/
 
 │
 ├── SONIC/
-
 │ ├── docs/
-
 │ ├── src/
-
 │ ├── prototypes/
-
 │ └── README.md
 
 │
 ├── AgroScan/
-
 │ ├── docs/
-
 │ ├── datasets/
-
 │ ├── model/
-
 │ └── README.md
 │
 
