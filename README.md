@@ -6,7 +6,7 @@ Applied AI, robotics, and sustainability prototypes prepared for TEKNOFEST submi
 ## Project Snapshot
 | Project | What it tackles | Key assets (repo paths) | Status |
 | --- | --- | --- | --- |
-| SONIC | Smart pest mitigation that pairs drone scouting, ultrasonic deterrents, and on-edge vision | `sonic/ExportBlock-7ea5f3ff-1aa7-4ba4-99f5-782a170eb01b-Part-1/_Mouse_Detection_using_YOLOv5_Object_De.py`, responsive UI mockups (`SONC_APP.html`, `SONC_vebsayt.html`), image evidence set, pitch PDFs | Field testing & software hardening |
+| SONIC | Smart pest mitigation that pairs drone scouting, ultrasonic deterrents, and on-edge vision | `sonic/src/rat_detector.py`, UI mockups (`sonic_app.html`, `sonic_website_mockup.html` planned), image evidence set, pitch PDFs | Field testing & software hardening |
 | AgroScan | Drone-based crop-health analytics with NDVI-style insights and mission planning | `agroscan/AgroScan proje sunumu.pdf` (deck + KPIs) | Concept validation |
 | Future entries | Additional TEKNOFEST concepts (aerial autonomy, smart irrigation, carbon monitoring) | Placeholder | Scoping |
 
