@@ -1,0 +1,157 @@
+TEKNOFEST
+HAVACILIK, UZAY VE TEKNOLOJİ FESTİVALİ
+TARIM TEKNOLOJİLERİ YARIŞMASI
+PROJE DETAY RAPORU
+TAKIM ADI:
+G - 21
+PROJE ADI:
+Zararlı Hayvanlara Karşı Drone’larla Önlem
+BAŞVURU ID:
+1060860
+1
+
+İÇERİK
+1. Proje Özeti (Proje Tanımı)  ---------------------------------------------------------------------​3
+2. Problem / Sorun  -----------------------------------------------------------------------------------​3
+2.1.  Birinci Problem – Zararvericiler.
+2.2.  İkinci problem – Aşırı insan emeyi.
+2.3. Üçüncü Problem – Ekosisteme toksik maddeler dahil etmek.
+3. Çözüm   ----------------------------------------------------------------------------------------------​5
+4. Yöntem   ---------------------------------------------------------------------------------------------​5
+4.1. Mekanik Aksam
+4.2. Elektronik Aksam
+4.3. Yazılım
+5. Yenilikçi (İnovatif) Yönü  ------------------------------------------------------------------------​13
+6. Uygulanabilirlik ------------------------------------------------------------------—--------------​14
+7. Tahmini Maliyet ve Proje Zaman Planlaması  ----------------------------------------------​14
+8. Proje Fikrinin Hedef Kitlesi (Kullanıcılar)  -------------------------------------------------16
+9. Riskler  ----------------------------------------------—-------------—--------------------------​16
+9.1. A riskleri
+9.2. B riskleri
+10. Referans / Kaynaklar ---------------------------------------------------------------------------​5
+● Rapor Taslakları ile İlgili Not  ------------------------------------------------------------------​6
+2
+
+1. Proje Özeti (Proje Tanımı)
+Günümüzde tarım ile meşgul olan şahısların aktüel problemlerinden biri aşırı maliyet ve
+mahsul kaybı yaşatan zararlı hayvanlardır. Bu zararlı hayvanlardan biri de insanlar için başlıca
+gıda kaynaklarından olan tahılın hasat edildiği arazilerde ciddi sorun yaratan farelerdir. Proje
+hem kemirgenleri, hem de onlara karşı gerçekleştirilen ekosisteme zararlı çözüm yollarını
+kökünden kaldırmayı hedefliyor.
+Azerbaycanda bazı çiftçilerle olan söyleşilerden (sah16 interview) fare problemini nasıl
+çözdüklerini ayrıntılarıyla öğrendik. Kısaca çözümleri “kara zehir” (sah4 kara zehir şekli) adlı
+fare zehiri kullanmak ya da bu zehri yüksek basınç ile fare yuvalarına püskürtmek oldu. Bu
+çözüm yollarında iki ana problem göze çarpıyor: ilki çok fazla insan emeği ve ikincisi
+ekosisteme zehirli maddelerin dahil olmasıdır. Projemiz bu iki probleme de rahat çözüm
+sunmaktadır: Çözüm yolumuz üzerinde termografik kamera, tasarladığımız yüksek frekansa
+(ultrasonik) ve gürlüğe sahip ses dalgaları yayan hipersonik hoparlörler, mesafe sensörü ve
+proglamladığımız yazılıma sahip drone’dan ibarettir (Şekil 9). Kullandığımız hipersonik ses
+hoparlörleri piyasadaki hayvan rahatsız edicilerinden farklıdır. Kullanıcı drone'u teslim
+aldıktan sonra kolay bir şekilde kurulumunu yapacak, daha sonra drone'un yazılımına arazinin
+haritası yükleyecek ve drone belirlenen rotasyona uygun şekilde termal kamera vasıtasıyla
+fareleri tespit ederek modifiye edilmiş ses dalgalarını onlara doğru yönelterek fareleri
+zararsızlaştıracaktır. Bundan başka termal kameranın yanlış cisimleri de hedef almaması için
+yazılıma sadece belirli ısı hacmine sahip cisimlere tepki vermesi için ayarladık.
+2. Problem / Sorun
+Tarımla ilgilenen çiftçilerle konuştuğumuz zaman, onların ortak 2 sorunu olduğunu
+tespit ettik. Çiftçilerin pek farkedemediği fakat çevre için büyük bir sorun olarak
+nitelendirdiğimiz 3-cü bir sorun daha var.
+2.1        Birinci Problem – Zararvericiler.
+Dünya üzerinde kemirgenlerin çeşitli zararlarını kapsayan araştırmalar gerçekleştirmiştir
+(referans 1). Bu araştırmalardan birinde zararvericilerin tarım arazilerine en önemli (>%30)
+kategoriye dahil edilecek türde zarar verdiği tespit edilmiştir. Araştırmadan çıkarılan sonuç ise
+şöyledir: yalnız Asiyada kemirgenlerin tarıma verdiği zarar bir yıl boyunca 200 milyon insanı
+gıda ile takviye etmeye yetecek tahıl demektir. O zaman şu soruyu duymak gayet doğaldır:
+kemirgenler nasıl oluyor da böyle akıl almaz bir zarar vermeyi başarıyorlar? Tahıl
+arazilerinde bulunan kemirgenler (fareler) ekilmiş tahıl tohumlarını tomurcuklanmaya izin
+vermeden yararsız hale getiriyorlar. Düşünelim ki çiftçilerin şansları yaver gitti ve
+kemirgenler tohumlara dokunmadı ve tahıl yeşerdi. O zamanda kemirgenler bitkinin köklerini
+kemirmeye başlıyorlar. Bu ise çok daha kötü bir durum. Çünki
+tahıl yeşerene kadar ona
+3
+
+verilmiş gübre ve diğer besin öğeleri başka bir anlatımla ona harcanmış sermaye ve emekler
+boşa gitmiş  oluyor. Peki kemirgenler bir çiftçiye ortalama olarak  ne kadar zarar veriyor?
+Azerbaycan Cumhuriyetinin Celilabad ilçesindeki çiftçilerden direk olarak aldığımız
+bilgiler doğrultusunda şu oranları çıkarmış bulunmaktayız: 1
+hektar alanı
+ele aldığımız
+zaman buraya kaliteli bir tahıl çeşidi ekerek %100-e yakın bir ürün almak mümkündür. Amma
+kemirgenlerin istilası sonucunda %16 gibi çok az oranda bir mahsul elde etmiş oluyoruz.
+Herşey gibi tahıl fiyatlarının da arşa çıktığı şu dönemde %84-lük bir kayıp çok büyük bir
+sorun. ( link 2 )
+Bu kemirgen sorunu yalnız Azerbaycan Cumhuriyeti için geçerli değildir. Dünyanın 4 bir
+yanında bu sorunla karşılaşmaktayız. Mesela özellikle Avusturyada ev farelerinin sayının
+beklenilmeyen artımı artık tarım arazilerine de sıçramıştır (referans 3)
+2.2      İkinci problem – Aşırı insan emeyi.
+Peki bu soruna nasıl çözüm bulmuşlar? Aslında çözüm kendisi de başlı başına bir
+sorun. Şöyleki 1 hektar alanda tahminen 9000 fare yuvasının () bulunması  mümkün. Ve tabiki
+çiftçiler o yuvalarda fare olup olmadığını bilmiyorlar. Bu yüzden buna çok azaplı da olsa bir
+çözüm bulmuşlar. Ekinden önce tüm kolu-komşuyla birlikte alana giderek tüm yuvaları
+birer-birer ayaklarıyla çiğneyerek yuvaların girişlerini kapatıyorlar  Ertesi gün gelip tekrar
+araziye bakıyorlar. Eğer ki, yuvaların girişi açılmışsa bu yuvalarda farelerin yaşadığı
+kanaatine varıyorlar. Sonra 12-15 tane buğday tanesine halk arasında “kara zehir” olarak
+bilinen özel ilaç katıyorlar.  Bu karışımı girişleri açılmış yuvaların önüne bırakıyorlar. Fareler
+buğdayları yedikten sonra ya hemen yerindece ya da yuvaya geri dönüp orada telef oluyorlar.
+Yuvaların girişlerini hiçbir mekanik alet kullanmadan yalnız ayakla kapatmak  çok zor  bir
+durum. Teknoloji devrinde bile bu  sorunun bizden önce makul bir çözüm sunulmuş olmaması
+ve çiftçilerimizin hala bu yöntemi kullanması içler acısı. Çiftçilerin bire-bir konuşmasında
+mağduriyetlerini bariz bir şekilde dile getirerek “artık kemirgenlerden gına geldik, bu çok ağır
+bir görev haline geldi” ifadelerini kullandılar. Takdire şayandır ki,  haklılık payları çok fazla.
+Kara zehir(altda)
+2.3          Üçüncü Problem – Ekosisteme toksik maddeler dahil etmek
+Üçüncü sorun çevre dostu ve insan sağlığına önem veren insanları
+çıldırtacakdır. Şöyleki farelere karşı özel ilaç olan “kara zehir” biyolojik bir
+faciadır. Ölü farelerin vücudu çürüyerek toprağa karıştığı zaman bu toksik
+ilaç da toprağa nüfuz ediyor, bu toprağın kullanıma yararlı olan - humus
+katını mahvediyor. Gelişmiş
+ülkeler ise kendilerine kolaylık olsun diye
+toprağı
+daha
+kolay
+mahvediyorlar.
+Gelişmiş
+ülkeler
+toksik
+maddeler
+karıştırılmış su ile dolu özel mekanik araçlarla, bu madde karışımını yüksek
+basınç altında yuvalara püskürtüyorlar. Yüksek basınçla püskürtülen suyla
+karıştırılmış ilaçlar tabiki toprağa çok daha kolay nüfuz eder. Şimdi işin bir
+de insan biyolojisi kısmına bakalım. Düşünelim ki, bu toksik ilaç bazı yollarla
+toprağa nüfuz etti. Bu toprakta büyümüş buğdayların insan vücudundaki
+4
+
+etkisi tartışılmaz derecede vahimdir. İlaçlar hem toprağın derin katlarına giderek yer altı
+sularına karışıp, zaten az olan içmeli su kaynaklarını kirletiyor, hem de daha kısa yolla, nehre
+dökülerek, o nehirde yaşayan
+balıkların bir kısmının vücuduna toplanarak onların ölümüne sebebiyet veriyor. Daha
+sonradan daha dirençli olup yaşamayı başaran balıklar insanlar tarafından tüketilerek kanser
+gibi insan sağlığına zararlı olgular oluşturabiliyorlar.
+Şekil 1.1, 1.2
+3. Çözüm
+Projemizde özellikle ciddi maliyet kaybına sebebiyet veren, bu ve diğer belirtilen
+sorunlara kaynak olan kemirgenlerden, çiftçinin günlerce tarım sahasına gitmesine gerek
+kalmadan,
+kolaylıkla
+kurtulabileceği,
+programlanmış
+drone
+teknolojisi
+sunmaktayız.
+Çözümümüz sadece mahsulün büyük bir kısmının fareler tarafından zarar görmesi neticesinde
+yaranan mali problemler için değil, aynı zamanda ekolojik (toksik maddelerin ekosisteme
+girmesi) ve yüksek insan sarfiyatı için de çaredir.
+Projeye başlarken nasıl hem tabiat dostu olup - zehir kullanmayarak, hem de diğer
+çözümlerden çok daha prodüktif bir şekilde kemirgenlerden kurtulabiliriz diye kafa yormaya
+başladık. Bu düşüncelerden yola çıkarak ve günümüz tarımında da artık sıkça kullanılan drone
+teknolojisi dikkatimizi çekti. Peki bu drone’dakı hangi modifikasyonlar farelerle mücadele
+etmeye yardımcı olacak? Takım olarak araştırmalarımız, teknolojik gelişim ve pratik
+bilgilerimiz sayesinde bu soruyu böyle yanıtlaya biliriz:
+Artık tarımda ve diğer tarım-dışı alanlarda kullanılan, zararlı hayvanı strese sokacak veya
+rahatsız ederek bulunduğu yerden uzaklaşmasına neden olacak ses dalgaları kullanılmaktadır.
+Bizim hipersonik hoperlörümüz ise ilgili canlının (bu projede öncelikli olarak fareler)
+biolojisine etki eden özgün frekanslara ve ses gürlüğüne sahip ses dalgaları yayarak bahsi
+geçen canlıların ölümüne sebebiyet verebiliyor. Kullandığımız hipersonik hoparlörler ( Şekil
+№8) sesi bir noktaya yönlendirebiliyor (lazerin ışığı bir noktaya yönlendire bildiğine benzer
+şekilde). Hoparlörler dronun alt kısmına monte edilecek.
+5

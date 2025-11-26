@@ -1,0 +1,129 @@
+TARIM TEKNOLOJİLERİ YARIŞMASI
+PROJE SUNUMU
+PROJE ADI: AgroScan – Yapay zeka entegreli hiperspektral tarım analiz
+sistemi
+TAKIM EĞİTİM SEVİYESİ: Üniversite
+KONUSU: Tarım Teknolojileri Yarışması
+TAKIM ADI: Teknovita
+TAKIM ID: 724353
+BAŞVURU ID: 3552698
+
+PROTOTİP / UYGULAMA
+GELİŞTİRME DURUMU
+SWOT ANALİZİ
+PROJE TAKVİMİ
+TİCARİLEŞME POTANSİYELİ
+VE SÜRDÜRÜLEBİLİRLİK
+HEDEF KİTLE
+ÖZGÜNLÜK VE
+YERLİLİK YÖNÜ
+ÖZET
+TAKIM TANITIMI
+www.teknofest.org
+1
+TAKIM YAPISI
+Aygün Bağırova    
+ Veri Analist
+BDU, Biyoloji (lisans)
+TAKIM KAPTANI
+Elmin Ağayev 
+Full-Stack yazılımcı
+BDU, Biyoloji(lisans)
+Yağmur Qurbanova
+Mekatronik
+mühendis
+BDU, fizik (linsans)
+Leman İmanzde 
+Tasarımcı
+BDU, Bilgisayar
+müh(lisans)
+ÇÖZÜM
+YÖNTEM
+TAKIM TANITIM
+PROBLEM TANIMI
+2025 TEKNOFEST İSTANBUL TARIM TEKNOLOJİLERİ KATEGORİSİ PROJE
+SUNUM ŞABLONU
+TAKIM ADI: Teknovita
+TAKIM İD: 724353
+BAŞVURU İD: 3552698
+2022 senesinde kurulan takımımız şimdiye kadar 3 TeknoFest, 1 Takeoff etkinliğine katılmıştır.
+Şimdiye kadar 5 proje ile yarı-finalist, 2 proje ile finalist olduk.
+
+ÖZET
+2
+www.teknofest.org
+2025 TEKNOFEST İSTANBUL TARIM TEKNOLOJİLERİ KATEGORİSİ PROJE
+SUNUM ŞABLONU
+TAKIM ADI: Teknovita
+TAKIM İD: 724353
+BAŞVURU İD: 3552698
+Agroscan, tarımı daha akıllı ve sürdürülebilir hale getirmek için geliştirilmiş, hiperspektral
+görüntüleme ve yapay zekâ destekli yenilikçi bir tarım izleme cihazıdır.
+ Bunun sayesinde üreticiler tarlalarındaki sorunları erken tespit ederek verim kayıplarını en aza
+indirebilir, ve daha sağlıklı mahsuller elde eder.
+ Üreticiler, tarlalarındaki su stresi seviyesini, bitki hastalıklarının yayılımını ve toprak sağlığı
+parametrelerini anlık olarak kontrol ve takip edebilir.
+ Hiperspektral kamera, dron entegrasyonu, su stresi ve hastalık tespiti, toprak sağlığı analizi, yapay
+zekâ destekli değerlendirme gibi özellikleriyle ileri tarım takibi sunan Agroscan, gelecekte
+genişletilebilir modüllerle farklı tarımsal çözümler üretme kapasitesine sahiptir.
+
+PROBLEM TANIMI
+3
+www.teknofest.org
+2025 TEKNOFEST İSTANBUL TARIM TEKNOLOJİLERİ KATEGORİSİ PROJE
+SUNUM ŞABLONU
+TAKIM ADI: Teknovita
+TAKIM İD: 724353
+BAŞVURU İD: 3552698
+ 
+Bitki gelişimini ayrı ayrı kontrol etme
+gerekliliği
+Gereksiz ilaç, gübre kullanımı
+Çiftçilerin doğru zamanda doğru
+müdahaleyi yapamaması
+Farklı bölgelerde homojen olmayan
+gelişim
+Tarla Verilerini Toplama ve
+Takip Zorluğu
+Veri Tabanlı Karar
+Eksikliği
+Ürün Kalitesinde
+Düzensizlik
+Kaynak İsrafı
+Bitkilerde yüzeyde görünmeyen stres ve
+hastalık belirtilerini erken tespit etmede
+yaşanan güçlükler
+Gereksiz su kullanımı
+Verimsiz planlama nedeniyle maliyet artışı
+Geleneksel yöntemlerle sınırlı bilgiye
+dayanılması
+Pazarlama ve ihracatta kalite
+standartlarını tutturamama
+
+ÇÖZÜM 
+4
+www.teknofest.org
+2025 TEKNOFEST İSTANBUL TARIM TEKNOLOJİLERİ KATEGORİSİ PROJE
+SUNUM ŞABLONU
+TAKIM ADI: Teknovita
+TAKIM İD: 724353
+BAŞVURU İD: 3552698
+Drone ile Otomatik
+Tarla Taraması
+Hiperspektral Görüntüleme
+Detaylı Toprak ve Bitki
+Raporları
+ Su Yönetimi Optimizasyonu
+Verim Tahmini ve Karar
+Desteği
+Mobil Uygulama Desteği
+Gerçek Zamanlı Veri Transfer
+Erken Uyarı Sistemi
+Veri Güvenliği
+Mahsul Rotasyonu
+Önerileri
+ Ekim ve Dikim
+Planlama Asistanı
+Gübre ve İlaç Kullanım
+Rehberi
+Kullanıcılara sunulanana özellikler

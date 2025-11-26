@@ -1,0 +1,92 @@
+sonic
+Sonic — bu sadəcə texnoloji bir layihə deyil, bu, bir missiyadır. Biz Azərbaycanlı 
+gənclər olaraq, kənd təsərrüfatını daha ağıllı, daha effektiv və daha davamlı etmək 
+üçün yola çıxdıq. Gəmiricilərlə mübarizədə ekoloji və texnoloji bir yanaşma təqdim 
+edən Sonic, fermerlərin gündəlik problemlərinə real, əlçatan və müasir həllər 
+gətirir.
+Biz bu layihəni qurarkən əsas hədəfimiz təkcə texnologiya yaratmaq deyildi — biz 
+həm də etimad yaratmaq, açıq və faydalı bir sistem qurmaq istədik. Elə buna görə 
+də Sonic-in bütün texnoloji həllərini açıq mənbə (open source) kimi paylaşırıq. 
+İstəyirik ki, bu ideya yalnız bir komandanın yox, cəmiyyətin uğuruna çevrilsin.
+İndi isə bu ideyanı daha da böyütmək, daha çox fermerə çatdırmaq və regiondan 
+kənara çıxarmaq üçün dəstəyinizə ehtiyacımız var. Biz inandıq, başladıq və 
+işləyirik. Sizin kimi vizyon sahibi investorların dəstəyi ilə isə Sonic təkcə bir layihə 
+olaraq qalmaz – o, sektoru dəyişən bir gücə çevrilə bilər.
+Əgər siz də gələcəyi dəyişəcək yerli texnoloji həllərin yanında olmaq istəyirsinizsə, 
+gəlin Sonic-i birgə irəli aparaq.
+🔥Ağıllı həll, səssiz qələbə!
+sonic
+1
+
+Bu layihənin müəllif hüquqları, “Türkiye Kurumsal Yönetim Sistemi” tərəfindən 
+qorunur! 
+Layihə “Türkiye Teknoloji Takımı” tərəfindən, “Milli Teknoloji Hamlesi” 
+çərçivəsində, “1060860” başvuru İD ilə qeydiyyatdan keçmişdir və layihənin 
+bütün haqları Qurbanəli Feyzullayevə məxsusdur. 
+Sonic layihəsini inkişaf etdirərkən belə bir qərara gəldik: bu proyektin bütün 
+kodları və texnoloji hissələri açıq mənbə (open source) olacaq.
+Biz şəffaflığı qorumağa və Azərbaycanın gənc proqramçılarının uğurlarını nümayiş 
+etdirməyə inanırıq. Ona görə də layihə çərçivəsində hazırladığımız bütün faylları 
+ictimaiyyətlə açıq şəkildə paylaşırıq. İstəyirik ki, bu işlərdən təkcə biz yox, digərləri 
+də faydalansın, öyrənsin, inkişaf etsin.
+Bu layihənin əqli mülkiyyət hüquqları “T3 Vakfı” tərəfindən qorunur! 
+Layihəmiz ölkəmizi İstanbul şəhərində keçirələn “Teknofest” texnologiya və 
+aviasiya festivalında uğurla təmsil edib.
+sonic-dən istifadə edən fermerlərin siyahısı:
+Ad
+Soyad
+Ünvan
+Əlaqə məlumatları
+sonic
+2
+
+Elçin
+Məmmədov
+Şəki rayonu
+055 861 91 65
+Seymur
+Cabbarov
+Şəki rayonu
+055 217 83 18
+Ruslan
+Xalıqov
+Cəlilabad rayonu
+055 779 35 25
+Pərviz
+İmanov
+Cəlilabad rayonu
+070 913 13 44
+Elşad
+Qasımov
+Ağdaş rayonu, Ləki qəsəbəsi
+050 324 41 28
+Nazim
+Cəfərov
+Zərdab rayonu
+Yoxdur
+sonic qısa təqdimat
+sonic layihəsi “Pasha Holding”, 
+“İDDA” və Türkiyə Respublikasının 
+“VİVEKA” inkubasiya mərkəzinin 
+birgə təşkilatçılığı ilə keçirilən 
+“VİVEKA Company Creation 
+Program”-ı uğurla bitirmişdir.
+Layihəmiz Bakı Dövlət Universitetini, 
+Türkiyənin İstanbul şəhərində uğurlu 
+təmsil etdiyi üçün.
+sonic pitch.pdf
+sonic
+3
+
+Enactus Bakı Dövlət Universiteti İllik Hesabat
+sonic teknofest raporu:
+sonic teknofest 2023 proje değerlendirme raporu.pdf
+sonic veb-sayt html faylı
+sonic
+4
+
+SONİC vebsayt.html
+sonic mobil aplikasiyası
+SONİC APP.html
+sonic
+5

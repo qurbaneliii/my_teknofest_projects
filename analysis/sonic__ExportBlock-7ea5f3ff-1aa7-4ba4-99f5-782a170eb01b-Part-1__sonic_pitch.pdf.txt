@@ -1,0 +1,71 @@
+BDU
+Enactus
+SONİC
+
+Enactus nədir?
+Enactus – universitet tələbələrinin liderlik, sahibkarlıq və sosial
+məsuliyyət bacarıqları əsasında cəmiyyətə faydalı layihələr
+həyata keçirdiyi qlobal bir təşkilatdır. Məqsədi sosial problemləri
+biznes yanaşması ilə həll etməkdir.
+Bakı Dövlət Universiteti
+
+Uğurlarımız:
+Bakı Dövlət Universiteti
+SONIC layihəsi ilə
+      🔹 2023 Teknofest İstanbul – Finalçı
+      🔹 2024 Enactus Azərbaycan Milli Yarışı – 3-cü yer
+      🔹 2025 Enactus Milli Yarış (Simulyasiya) – 2-ci yer
+
+
+Problem
+Problemin təsviri
+Həll yolumuz
+Problem & Həll yolu cədvəli
+Kimyəvi mübarizə
+İqtisadi zərər
+İqtisadi və ekoloji
+dayanıqlığın
+olmaması
+Ənənəvi həll
+yollarının
+səmərəsizliyi
+İnsan əməyinin
+səmərəsizliyi
+Zərər vericilərlə mübarizə aparmaq üçün.
+kimyəvi mübarizə metodlarından,
+zoosidlərdən istifadə olunur.
+Əlbəttə, siçanlarla necəsə mübarizə
+aparmalıyıq, çünki onlar taxıl sahələrinə,
+bilavasitə iqtisadiyyata bu yolla ciddi zərər
+verir. 
+Zoosidlərin istifadəsi hər il minlərlə manat artıq
+xərcin yaranmağını səbəb olur. Bununlada
+qalmır, o torpağın strukturuna birbaşa təsir
+edir, insan sağlamlığı üçün təhlükə törədir.
+Siçan zəhərlərindən istifadə etdikdə, bu
+kimyəvi birləşmələr torpaqla, dolayısıyla taxılla
+qarışır və insan sağlamlığına mənfi təsir
+göstərir.
+Biz daha səmərəli metod olan hipersonik səs
+dalğalarından istifadə edirik. Bu isə həm
+torpağın zərər görməyinin, həm də gəmiricinin
+zərər görməyinin qarşısını alır.
+Biz daha aşağı maliyyətli mübarizə yolu inkşaf
+etdirmişik, hansı ki, bunun sayəsində iqtisadi
+zərərin qarşısını əhəmiyyətli dərəcədə almışıq.
+Hipersəs dalğları yayan avtonom cihazımızı bir
+dəfə əldə etməklə, illlər ərzində zoosid xərcindən
+azad olmuş olur. Həmçinin ekosistemə, torpaq
+strukturuna, insan sağlamlığına zərər vermir.
+Biz həll yolumuzda, “Object detection”
+texnologiyasından istifadə edirik. Bunun
+sayəsində səs dalğaları ancaq gəmiriciyə təsir
+edəsi səviyyədə optimallaşdırılır.
+Kənd təsərrüfatında zərərvericilərə qarşı
+mübarizə əsasən fiziki əməyə və kimyəvi
+vasitələrə əsaslanır. Bu isə vaxt itkisi, aşağı
+dəqiqlik və ətraf mühitə zərər ilə nəticələnir.
+SONIC layihəsi bu prosesi hipersəs dalğaları, dron
+və robot texnologiyaları ilə avtomatlaşdıraraq insan
+əməyini minimuma endirir, mübarizəni daha sürətli,
+dəqiq və ekoloji şəkildə həyata keçirir.
