@@ -1,0 +1,34 @@
+# Python environments
+.venv/
+env/
+venv/
+__pycache__/
+*.pyc
+
+# Logs & runtime artifacts
+*.log
+rat_detector.log
+alerts.txt
+
+# Model weights & large assets
+models/
+*.pt
+*.onnx
+*.engine
+
+# Output / generated analysis
+analysis/
+detections/
+runs/
+
+# OS / Editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+
+# Archive & binary dumps
+*.zip
+*.tar
+*.gz
+*.xz

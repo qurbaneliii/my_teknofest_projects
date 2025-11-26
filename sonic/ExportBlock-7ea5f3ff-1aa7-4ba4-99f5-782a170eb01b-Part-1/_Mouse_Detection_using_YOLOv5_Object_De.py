@@ -9,16 +9,14 @@ import numpy as np
 import time
 import json
 import logging
-import os
-import urllib.request
-import threading
 from datetime import datetime
-from typing import List, Tuple, Dict, Optional, Any
-from dataclasses import dataclass, asdict
+from typing import List
+from dataclasses import dataclass
 from pathlib import Path
 import argparse
 import sys
 import warnings
+
 warnings.filterwarnings('ignore')
 
 # Add YOLOv8 import
@@ -71,20 +69,24 @@ class RatTrack:
     alert_sent: bool = False
 
 class RatDetector:
-    """Main mouse detection class using custom YOLOv8 model"""
-    def __init__(self, model_path: str = "models/best.pt", config_path: str = "config.json"):
+    """Mouse/Rat detection using YOLOv8 with lightweight tracking and alerting."""
+    def __init__(self, model_path: str = "models/best.pt", config_path: str = "config.json", class_name: str = "mouse"):
         self.config = self._load_config(config_path)
-        self.model = YOLO(model_path)
-        self.class_name = 'mouse'
+        try:
+            self.model = YOLO(model_path)
+        except Exception as e:
+            logging.error(f"Failed to load YOLO model at {model_path}: {e}")
+            raise
+        self.class_name = class_name
         self.frame_count = 0
-        self.detection_history = []
-        self.tracks = {}
+        self.detection_history: List[Detection] = []
+        self.tracks: dict[int, RatTrack] = {}
         self.track_id_counter = 0
-        self.alert_callbacks = []
-        self.last_alert_time = 0
-        self.confidence_threshold = self.config.get('confidence_threshold', 0.7)
-        self.max_track_age = self.config.get('max_track_age', 30)
-        self.alert_cooldown = self.config.get('alert_cooldown', 5.0)
+        self.alert_callbacks: List = []
+        self.last_alert_time = 0.0
+        self.confidence_threshold = float(self.config.get('confidence_threshold', 0.7))
+        self.max_track_age = int(self.config.get('max_track_age', 30))
+        self.alert_cooldown = float(self.config.get('alert_cooldown', 5.0))
 
     def _load_config(self, config_path: str) -> dict:
         default_config = {
@@ -107,77 +109,70 @@ class RatDetector:
             json.dump(default_config, f, indent=2)
         return default_config
 
-    def detect_rats(self, frame: np.ndarray) -> list:
-        """Detect mice using YOLOv8 model"""
-        results = self.model(frame)
-        detections = []
+    def detect_rats(self, frame: np.ndarray) -> List[Detection]:
+        """Run inference and collect detections above confidence threshold."""
+        try:
+            results = self.model(frame)
+        except Exception as e:
+            logging.warning(f"Model inference failed: {e}")
+            return []
+        detections: List[Detection] = []
         for r in results:
-            for box in r.boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = float(box.conf[0])
-                cls = int(box.cls[0])
-                if self.model.names[cls] == self.class_name and conf > self.confidence_threshold:
-                    detection = Detection(
-                        x=x1, y=y1, width=x2-x1, height=y2-y1,
+            boxes = getattr(r, 'boxes', [])
+            for box in boxes:
+                try:
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    conf = float(box.conf[0])
+                    cls = int(box.cls[0])
+                except Exception:
+                    continue
+                name = self.model.names.get(cls, "unknown") if hasattr(self.model, 'names') else str(cls)
+                if name == self.class_name and conf >= self.confidence_threshold:
+                    detections.append(Detection(
+                        x=x1,
+                        y=y1,
+                        width=x2 - x1,
+                        height=y2 - y1,
                         confidence=conf,
-                        class_name=self.class_name,
+                        class_name=name,
                         timestamp=datetime.now(),
                         frame_id=self.frame_count
-                    )
-                    detections.append(detection)
+                    ))
         return detections
     
-    def update_tracks(self, detections: List[Detection]):
-        """Update object tracking"""
-        # Simple tracking based on proximity
-        unmatched_detections = detections.copy()
-        
-        # Update existing tracks
-        for track_id, track in self.tracks.items():
-            if not track.is_active:
+    def update_tracks(self, detections: List[Detection]) -> None:
+        """Associate detections to existing tracks using nearest-neighbor distance."""
+        if not detections and not self.tracks:
+            return
+        unmatched = detections.copy()
+        for track in list(self.tracks.values()):
+            if not track.is_active or not track.detections:
                 continue
-            
-            best_match = None
-            min_distance = float('inf')
-            
-            if track.detections:
-                last_detection = track.detections[-1]
-                last_x = last_detection.x + last_detection.width // 2
-                last_y = last_detection.y + last_detection.height // 2
-                
-                for detection in unmatched_detections:
-                    curr_x = detection.x + detection.width // 2
-                    curr_y = detection.y + detection.height // 2
-                    
-                    distance = np.sqrt((curr_x - last_x)**2 + (curr_y - last_y)**2)
-                    
-                    if distance < min_distance and distance < 100:  # Max distance threshold
-                        min_distance = distance
-                        best_match = detection
-                
-                if best_match:
-                    track.detections.append(best_match)
-                    track.last_seen = best_match.timestamp
-                    unmatched_detections.remove(best_match)
-                    
-                    # Send alert if not already sent
-                    if not track.alert_sent:
-                        self._send_alert(track)
-                        track.alert_sent = True
-                else:
-                    # Check if track should be deactivated
-                    if self.frame_count - track.detections[-1].frame_id > self.max_track_age:
-                        track.is_active = False
-        
-        # Create new tracks
-        for detection in unmatched_detections:
-            new_track = RatTrack(
-                track_id=self.track_id_counter,
-                detections=[detection],
-                last_seen=detection.timestamp,
-                is_active=True,
-                alert_sent=False
-            )
+            last = track.detections[-1]
+            lx = last.x + last.width // 2
+            ly = last.y + last.height // 2
+            best = None
+            best_dist = 120.0  # distance threshold
+            for det in unmatched:
+                cx = det.x + det.width // 2
+                cy = det.y + det.height // 2
+                d = ((cx - lx)**2 + (cy - ly)**2) ** 0.5
+                if d < best_dist:
+                    best_dist = d
+                    best = det
+            if best:
+                track.detections.append(best)
+                track.last_seen = best.timestamp
+                unmatched.remove(best)
+                if not track.alert_sent:
+                    self._send_alert(track)
+                    track.alert_sent = True
+            else:
+                # deactivate stale tracks
+                if self.frame_count - last.frame_id > self.max_track_age:
+                    track.is_active = False
+        for det in unmatched:
+            new_track = RatTrack(track_id=self.track_id_counter, detections=[det], last_seen=det.timestamp)
             self.tracks[self.track_id_counter] = new_track
             self.track_id_counter += 1
     
@@ -194,38 +189,25 @@ class RatDetector:
         self.alert_callbacks.append(callback)
     
     def draw_detections(self, frame: np.ndarray, detections: List[Detection]) -> np.ndarray:
-        """Draw detection boxes, labels, and confidence bars on frame"""
-        for detection in detections:
-            # Draw bounding box
-            color = (0, 255, 0) if detection.confidence > 0.7 else (0, 255, 255)
-            cv2.rectangle(frame, (detection.x, detection.y), 
-                         (detection.x + detection.width, detection.y + detection.height), 
-                         color, 2)
-            
-            # Draw label
-            label = f"{detection.class_name}: {detection.confidence:.2f}"
-            label_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)[0]
-            cv2.rectangle(frame, (detection.x, detection.y - label_size[1] - 10),
-                         (detection.x + label_size[0], detection.y), color, -1)
-            cv2.putText(frame, label, (detection.x, detection.y - 5),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
-
-            # Draw confidence bar
-            bar_x = detection.x
-            bar_y = detection.y + detection.height + 8
-            bar_width = int(100 * min(max(detection.confidence, 0.0), 1.0))  # 0-100 px
-            bar_height = 10
-            cv2.rectangle(frame, (bar_x, bar_y), (bar_x + 100, bar_y + bar_height), (180, 180, 180), 1)  # Outline
-            cv2.rectangle(frame, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), (0, 180, 0), -1)  # Fill
-            cv2.putText(frame, f"{int(detection.confidence*100)}%", (bar_x + 105, bar_y + bar_height - 2),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1)
-        # Draw tracking info
-        active_tracks = sum(1 for track in self.tracks.values() if track.is_active)
-        info_text = f"Method: YOLOv8 | Frame: {self.frame_count} | Detections: {len(detections)} | Active Tracks: {active_tracks}"
-        cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+        """Overlay boxes, labels, confidence bars, and session info."""
+        for d in detections:
+            color = (0, 200, 0) if d.confidence >= self.confidence_threshold else (0, 200, 200)
+            cv2.rectangle(frame, (d.x, d.y), (d.x + d.width, d.y + d.height), color, 2)
+            label = f"{d.class_name}:{d.confidence:.2f}"
+            (lw, lh), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+            cv2.rectangle(frame, (d.x, d.y - lh - 6), (d.x + lw, d.y), color, -1)
+            cv2.putText(frame, label, (d.x, d.y - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+            # Confidence bar
+            bar_w = int(80 * min(max(d.confidence, 0.0), 1.0))
+            bar_y = d.y + d.height + 6
+            cv2.rectangle(frame, (d.x, bar_y), (d.x + 80, bar_y + 8), (140, 140, 140), 1)
+            cv2.rectangle(frame, (d.x, bar_y), (d.x + bar_w, bar_y + 8), (0, 180, 0), -1)
+        active = sum(1 for t in self.tracks.values() if t.is_active)
+        info = f"YOLOv8 | Frame {self.frame_count} | Det {len(detections)} | Tracks {active}"
+        cv2.putText(frame, info, (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         return frame
     
-    def process_video(self, video_path: str = None, output_path: str = None):
+    def process_video(self, video_path: str | None = None, output_path: str | None = None):
         while True:
             if video_path and Path(video_path).exists():
                 cap = cv2.VideoCapture(video_path)
@@ -281,16 +263,9 @@ class RatDetector:
                     
                     self.frame_count += 1
                     
-                    # Detect rats
                     detections = self.detect_rats(frame)
-                    
-                    # Update tracking
                     self.update_tracks(detections)
-                    
-                    # Store detection history
                     self.detection_history.extend(detections)
-                    
-                    # Draw results
                     frame_with_detections = self.draw_detections(frame, detections)
 
                     # Draw a scale bar (e.g., 100 pixels = 10 cm)
@@ -334,10 +309,10 @@ class RatDetector:
                         writer.write(frame_with_detections)
                     
                     # Log progress
-                    if self.frame_count % 100 == 0:
+                    if self.frame_count % 120 == 0:
                         elapsed = time.time() - start_time
-                        current_fps = self.frame_count / elapsed
-                        logging.info(f"Processed {self.frame_count} frames at {current_fps:.1f} FPS")
+                        fps_calc = self.frame_count / max(elapsed, 1e-3)
+                        logging.info(f"Frames: {self.frame_count} | FPS: {fps_calc:.1f} | Detections: {len(self.detection_history)}")
                     
                     # Check for quit
                     try:
@@ -345,37 +320,7 @@ class RatDetector:
                         if key == ord('q'):
                             break
                         elif key == ord('l'):
-                            # Image detection mode
-                            try:
-                                image_path = input("Enter image path for detection: ")
-                            except (EOFError, KeyboardInterrupt, Exception):
-                                print("Input not available in this environment. Skipping image mode.")
-                                continue
-                            if not image_path:
-                                print("No image path provided. Skipping image mode.")
-                                continue
-                            if Path(image_path).exists():
-                                image_frame = cv2.imread(image_path)
-                                if image_frame is not None:
-                                    image_detections = self.detect_rats(image_frame)
-                                    image_frame_with_detections = self.draw_detections(image_frame, image_detections)
-                                    cv2.imshow('Rat Detector - Image', image_frame_with_detections)
-                                    cv2.waitKey(0)
-                                    cv2.destroyAllWindows()
-                                    out_path = Path(image_path).with_name(f"detected_{Path(image_path).name}")
-                                    cv2.imwrite(str(out_path), image_frame_with_detections)
-                                    logging.info(f"Detection result saved to {out_path}")
-                                    print("\n" + "="*50)
-                                    print("IMAGE DETECTION SUMMARY")
-                                    print("="*50)
-                                    print(f"Detections: {len(image_detections)}")
-                                    for det in image_detections:
-                                        print(f"Class: {det.class_name}, Confidence: {det.confidence:.2f}, Location: ({det.x}, {det.y}, {det.width}, {det.height})")
-                                    print("="*50)
-                                else:
-                                    logging.error(f"Failed to load image: {image_path}")
-                            else:
-                                logging.error(f"Image file {image_path} does not exist.")
+                            logging.info("'l' pressed - image mode disabled in loop; use --image CLI argument instead.")
                         elif key == ord('c'):
                             # Return to camera feed
                             cv2.destroyAllWindows()
@@ -391,21 +336,9 @@ class RatDetector:
                             self.last_alert_time = 0 # Reset alert cooldown
                             logging.info("Switched back to camera feed")
                         elif key == ord('s') and self.config.get('show_preview', True):
-                            # Save current detected image (when in image mode)
-                            try:
-                                image_path = input("Enter image path to save (e.g., 'detected_image.jpg'): ")
-                            except (EOFError, KeyboardInterrupt, Exception):
-                                print("Input not available in this environment. Skipping save.")
-                                continue
-                            if not image_path:
-                                print("No image path provided. Skipping save.")
-                                continue
-                            out_path = Path(image_path)
-                            if out_path.suffix.lower() not in ['.jpg', '.jpeg', '.png', '.bmp']:
-                                out_path = out_path.with_suffix('.jpg') # Default to jpg
+                            out_path = Path(f"frame_{self.frame_count}.jpg")
                             cv2.imwrite(str(out_path), frame_with_detections)
-                            logging.info(f"Current frame saved to {out_path}")
-                            print(f"Current frame saved to {out_path}")
+                            logging.info(f"Saved snapshot {out_path}")
                     except Exception as e:
                         logging.warning(f"Error handling key press: {e}")
             except KeyboardInterrupt:
