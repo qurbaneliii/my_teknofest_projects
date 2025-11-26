@@ -6,29 +6,49 @@ Applied AI, robotics, and sustainability prototypes prepared for TEKNOFEST submi
 ## Project Snapshot
 | Project | What it tackles | Key assets (repo paths) | Status |
 | --- | --- | --- | --- |
-| SONIC | Smart pest mitigation that pairs drone scouting, ultrasonic deterrents, and on-edge vision | `sonic/src/rat_detector.py`, UI mockups (`sonic_app.html`, `sonic_website_mockup.html` planned), image evidence set, pitch PDFs | Field testing & software hardening |
-| AgroScan | Drone-based crop-health analytics with NDVI-style insights and mission planning | `agroscan/AgroScan proje sunumu.pdf` (deck + KPIs) | Concept validation |
+| SONIC | Smart pest mitigation that pairs drone scouting, ultrasonic deterrents, and on-edge vision | Modular detector: `sonic/src/{core,alerts,visualization}`, CLI: `sonic/src/cli.py`, Assets: `sonic/assets/` | Production-ready v0.2 |
+| AgroScan | Drone-based crop-health analytics with NDVI-style insights and mission planning | `agroscan/docs/agroscan_pitch.pdf` | Concept validation |
 | Future entries | Additional TEKNOFEST concepts (aerial autonomy, smart irrigation, carbon monitoring) | Placeholder | Scoping |
 
 ---
 
 ## SONIC · Smart Rodent Intelligence & Control
-Sonic combines a YOLOv8-based detector with custom alerting, drone scouting plans, and farmer-facing interfaces to keep storage silos and open fields rodent-free without chemical interventions.
+SONIC combines YOLOv8-based detection with modular tracking, configurable alerts, and farmer-facing interfaces to keep storage silos and fields rodent-free without chemical interventions.
 
-**Highlights**
-- YOLOv8 inference + multi-target tracking implemented in `_Mouse_Detection_using_YOLOv5_Object_De.py` (OpenCV UI overlays, alert callbacks, JSON logging)
-- Low-bandwidth telemetry and alert fan-out (console/log/file callbacks) tuned for rural connectivity
-- UI mockups (`SONC_APP.html`, `SONC_vebsayt.html`) and multilingual collateral (`sonic azərbaycanca.pdf`, `sonic_pitch.pdf`, `sonic_teknofest_2023_proje_deerlendirme_raporu.pdf`)
-- Visual dataset snapshots (`image*.png`, WhatsApp exports) documenting field captures and misclassification cases
+**Architecture (v0.2 - Refactored)**
+- **Core Detection**: `sonic/src/core/` - Detector, Tracker, and data models (Detection, Track)
+- **Alert System**: `sonic/src/alerts/` - Pluggable handlers (console, file, log)
+- **Visualization**: `sonic/src/visualization/` - OpenCV overlay rendering
+- **Configuration**: `sonic/src/config.py` - Type-safe config management with JSON schema
+- **CLI**: `sonic/src/cli.py` - Main entry point with video/image/camera modes
 
-**Quickstart (detector script)**
-1. `python -m venv .venv && source .venv/bin/activate`
-2. `pip install ultralytics opencv-python numpy`
-3. Drop your custom YOLO weights into `models/best.pt` (configurable via CLI)
-4. Run camera mode: `python sonic/.../_Mouse_Detection_using_YOLOv5_Object_De.py --camera`
-5. Run inference on footage: `python ...py --video data/test.mp4 --output runs/test.avi`
+**Assets**
+- Pitch decks: `sonic/assets/docs/{sonic_pitch_en.pdf, sonic_pitch_az.pdf, sonic_2023_evaluation.pdf}`
+- UI mockups: `sonic/assets/mockups/{sonic_app.html, sonic_website.html}`
+- Dataset: `sonic/assets/dataset/{field_captures/, sample_images/}`
 
-Useful flags: `--image path/to/frame.jpg`, `--no-preview` for headless servers, `--config custom_config.json` to persist thresholds/output paths.
+**Quickstart**
+```bash
+# Install
+pip install -e .  # or: pip install -r requirements.txt
+
+# Setup config
+cp sonic/config.example.json config.json
+# Edit config.json to point to your model weights
+
+# Run detection
+python -m sonic.src.cli --camera              # Live camera
+python -m sonic.src.cli --video input.mp4     # Video file
+python -m sonic.src.cli --image frame.jpg     # Single image
+```
+
+**Development**
+```bash
+pip install -r requirements-dev.txt
+pytest                    # Run tests
+ruff check sonic/         # Lint
+black sonic/              # Format
+```
 
 ---
 
@@ -45,25 +65,46 @@ AgroScan focuses on affordable aerial scouting. The current assets capture the m
 ```
 my_teknofest_projects/
 ├── README.md
+├── requirements.txt
+├── requirements-dev.txt
+├── pyproject.toml
+├── .gitignore
+├── tests/
+│   ├── conftest.py
+│   ├── test_detector.py
+│   ├── test_tracker.py
+│   └── test_alerts.py
+├── tools/
+│   ├── text_extractor.py
+│   └── README.md
 ├── agroscan/
-│   └── AgroScan proje sunumu.pdf
+│   └── docs/
+│       └── agroscan_pitch.pdf
 └── sonic/
-    ├── sonic azərbaycanca.pdf
-    └── ExportBlock-7ea5f3ff-1aa7-4ba4-99f5-782a170eb01b-Part-1/
-        ├── _Mouse_Detection_using_YOLOv5_Object_De.py
-        ├── SONC_APP.html
-        ├── SONC_vebsayt.html
-        ├── image*.png, WhatsApp_kil*.jpg
-        └── sonic_pitch.pdf · sonic_teknofest_2023_proje_deerlendirme_raporu.pdf
+    ├── config.example.json
+    ├── src/
+    │   ├── core/           (Detector, Tracker, models)
+    │   ├── alerts/         (AlertHandler interface + implementations)
+    │   ├── visualization/  (OverlayRenderer)
+    │   ├── config.py
+    │   └── cli.py
+    └── assets/
+        ├── docs/           (pitch decks, evaluation reports)
+        ├── mockups/        (HTML prototypes)
+        └── dataset/        (field captures, sample images)
 ```
 
 ---
 
 ## Roadmap
+- [x] Modularize detector into core/alerts/visualization components
+- [x] Add comprehensive test suite (pytest + fixtures)
+- [x] Implement proper configuration management
+- [x] Reorganize assets with semantic naming
 - [ ] Publish SONIC hardware integration notes (ultrasonic array, drone payload specs)
 - [ ] Add AgroScan preprocessing notebooks + sample orthomosaic tiles
-- [ ] Capture short demo videos and host them via release artifacts
-- [ ] Localize SONIC app copy (EN/TR/AZ) inside the HTML prototypes
+- [ ] Deploy containerized inference service (Docker + FastAPI)
+- [ ] CI/CD pipeline with automated testing
 
 ---
 

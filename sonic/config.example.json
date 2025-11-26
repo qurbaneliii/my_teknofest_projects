@@ -1,0 +1,15 @@
+{
+  "confidence_threshold": 0.7,
+  "model_path": "models/best.pt",
+  "target_class": "mouse",
+  "track_distance_threshold": 120.0,
+  "max_track_age": 30,
+  "alert_cooldown": 5.0,
+  "enable_console_alerts": true,
+  "enable_file_alerts": true,
+  "enable_log_alerts": true,
+  "save_detections": true,
+  "output_dir": "detections",
+  "video_output": true,
+  "show_preview": true
+}
