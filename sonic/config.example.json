@@ -11,5 +11,9 @@
   "save_detections": true,
   "output_dir": "detections",
   "video_output": true,
-  "show_preview": true
+  "show_preview": true,
+  "dataset_dir": "sonic/assets/dataset/sample_images",
+  "preprocess_output_dir": "outputs",
+  "preview_width": null,
+  "allow_missing_model": true
 }

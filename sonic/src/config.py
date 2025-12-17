@@ -1,10 +1,12 @@
-"""Configuration management for SONIC detector."""
+"""Configuration management for SONIC detector with validation."""
 
 import json
 import logging
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
-from dataclasses import dataclass, asdict
+from typing import Any, Optional
+
+from pydantic import BaseModel, Field, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -33,30 +35,34 @@ class DetectorConfig:
     output_dir: str = "detections"
     video_output: bool = True
     show_preview: bool = True
+    dataset_dir: Optional[str] = None
+    preprocess_output_dir: str = "outputs"
+    preview_width: Optional[int] = None
+    allow_missing_model: bool = True
 
     @classmethod
     def from_file(cls, path: str | Path) -> "DetectorConfig":
-        """Load configuration from JSON file.
-        
-        Args:
-            path: Path to config file
-            
-        Returns:
-            DetectorConfig instance
-        """
+        """Load configuration from JSON file with validation."""
         config_path = Path(path)
         if not config_path.exists():
             logger.warning(f"Config file {config_path} not found, using defaults")
-            return cls()
-        
+            instance = cls()
+            instance.validate()
+            return instance
+
         try:
             with open(config_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             logger.info(f"Loaded config from {config_path}")
-            return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
+            instance = cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
+            instance.validate()
+            return instance
+        except ValidationError as exc:
+            logger.error(f"Config validation failed for {config_path}: {exc}")
+            raise
         except Exception as e:
             logger.error(f"Failed to load config from {config_path}: {e}")
-            return cls()
+            raise
 
     def save(self, path: str | Path) -> None:
         """Save configuration to JSON file.
@@ -77,3 +83,27 @@ class DetectorConfig:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return asdict(self)
+
+    def validate(self) -> None:
+        """Validate current configuration using pydantic rules."""
+
+        class _ConfigModel(BaseModel):
+            confidence_threshold: float = Field(default=0.7, ge=0, le=1)
+            model_path: str = Field(default="models/best.pt", min_length=1)
+            target_class: str = Field(default="mouse", min_length=1)
+            track_distance_threshold: float = Field(default=120.0, gt=0)
+            max_track_age: int = Field(default=30, gt=0)
+            alert_cooldown: float = Field(default=5.0, ge=0)
+            enable_console_alerts: bool = True
+            enable_file_alerts: bool = True
+            enable_log_alerts: bool = True
+            save_detections: bool = True
+            output_dir: str = Field(default="detections", min_length=1)
+            video_output: bool = True
+            show_preview: bool = True
+            dataset_dir: Optional[str] = None
+            preprocess_output_dir: str = Field(default="outputs", min_length=1)
+            preview_width: Optional[int] = Field(default=None, gt=0)
+            allow_missing_model: bool = True
+
+        _ConfigModel(**self.to_dict())

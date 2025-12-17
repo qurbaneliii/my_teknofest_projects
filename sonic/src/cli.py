@@ -1,14 +1,16 @@
 """Main CLI entry point for SONIC rat detection system."""
 
 import argparse
+import json
 import logging
 import time
 from pathlib import Path
 from typing import List
+
 import cv2
 
 from sonic.src.config import DetectorConfig
-from sonic.src.core import Detector, Tracker, Detection
+from sonic.src.core import Detection, Detector, Tracker
 from sonic.src.alerts import ConsoleAlertHandler, FileAlertHandler, LogAlertHandler
 from sonic.src.visualization import OverlayRenderer
 
@@ -24,6 +26,7 @@ class DetectionSession:
             model_path=config.model_path,
             class_name=config.target_class,
             confidence_threshold=config.confidence_threshold,
+            allow_missing_model=config.allow_missing_model,
         )
         self.tracker = Tracker(
             distance_threshold=config.track_distance_threshold,
@@ -85,6 +88,43 @@ class DetectionSession:
                         logger.error(f"Alert handler failed: {e}")
                 track.alert_sent = True
                 self.last_alert_time = current_time
+
+    def preprocess_dataset(self):
+        """Simple dataset preprocessing stub: logs discovered images and writes manifest."""
+        dataset_dir = Path(self.config.dataset_dir or "sonic/assets/dataset/sample_images")
+        if not dataset_dir.exists():
+            logger.warning(f"Dataset dir not found: {dataset_dir}")
+            return
+
+        images = [p for p in dataset_dir.rglob("*") if p.suffix.lower() in {".jpg", ".png", ".jpeg"}]
+        output_dir = Path(self.config.preprocess_output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        manifest = {
+            "dataset_dir": str(dataset_dir),
+            "count": len(images),
+            "files": [str(p) for p in images],
+        }
+        manifest_path = output_dir / "dataset_manifest.json"
+        manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        logger.info(f"Preprocessing complete. Found {len(images)} images. Manifest: {manifest_path}")
+
+    def simulate_alert(self):
+        """Trigger alert handlers with a dummy track."""
+        from datetime import datetime
+        dummy_detection = Detection(
+            x=10,
+            y=10,
+            width=20,
+            height=20,
+            confidence=0.9,
+            class_name=self.config.target_class,
+            timestamp=datetime.now(),
+            frame_id=0,
+        )
+        track = self.tracker.update([dummy_detection], frame_id=0)[0]
+        for handler in self.alert_handlers:
+            handler(track)
+        logger.info("Alert simulation completed")
 
     def run_video(self, video_path: str | None = None, output_path: str | None = None):
         """Run detection on video file or camera stream."""
@@ -211,6 +251,9 @@ def main():
     parser.add_argument("--image", type=str, help="Single image to process")
     parser.add_argument("--camera", action="store_true", help="Use camera feed")
     parser.add_argument("--no-preview", action="store_true", help="Disable video preview")
+    parser.add_argument("--preprocess-dataset", action="store_true", help="List dataset images and write manifest")
+    parser.add_argument("--dataset-dir", type=str, help="Dataset directory for preprocessing")
+    parser.add_argument("--simulate-alert", action="store_true", help="Trigger alert handlers with dummy track")
     args = parser.parse_args()
     
     # Setup logging
@@ -227,10 +270,21 @@ def main():
     config = DetectorConfig.from_file(args.config)
     if args.no_preview:
         config.show_preview = False
+    if args.dataset_dir:
+        config.dataset_dir = args.dataset_dir
+    config.validate()
     
     # Create session
     session = DetectionSession(config)
-    
+
+    if args.preprocess_dataset:
+        session.preprocess_dataset()
+        return
+
+    if args.simulate_alert:
+        session.simulate_alert()
+        return
+
     # Run appropriate mode
     if args.image:
         session.process_image(args.image)

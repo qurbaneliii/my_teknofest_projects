@@ -1,5 +1,13 @@
 # TEKNOFEST Field Projects
-Applied AI, robotics, and sustainability prototypes prepared for TEKNOFEST submissions. Each folder contains the research collateral, pitch material, and—when available—production code that powered our latest iterations.
+Applied AI, robotics, and sustainability prototypes prepared for TEKNOFEST submissions.
+
+**Project READMEs**
+- SONIC: `sonic/README.md`
+- AgroScan: `agroscan/docs/agroscan_pitch.md`
+
+**Docs Site (MkDocs)**
+- Run locally: `pip install -e .[docs] && mkdocs serve`
+- GitHub Pages ready via `site/` on publish
 
 ---
 

@@ -1,0 +1,40 @@
+site_name: TEKNOFEST Projects
+site_description: SONIC & AgroScan documentation
+site_url: https://qurbaneliii.github.io/my_teknofest_projects/
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+    - content.code.copy
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: teal
+nav:
+  - Overview: docs/index.md
+  - SONIC: docs/sonic.md
+  - AgroScan: docs/agroscan.md
+  - Roadmap: docs/roadmap.md
+  - Configuration: docs/config.md
+  - API Reference: docs/api.md
+  - Demos: docs/demos.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [sonic/src, tools]
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - tables
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/gurbanalifeyzullayev/
+    - icon: fontawesome/solid/envelope
+      link: mailto:qurbanelifeyzullayev@gmail.com

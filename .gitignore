@@ -1,34 +1,107 @@
-# Python environments
+# ======================
+# Python Environments
+# ======================
 .venv/
+.env/
 env/
 venv/
-__pycache__/
-*.pyc
+.python-version
 
-# Logs & runtime artifacts
+# ======================
+# Python Bytecode
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+eggs/
+*.egg-info/
+*.egg
+.installed.cfg
+pip-wheel-metadata/
+
+# ======================
+# IDE & Editor
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ======================
+# Logs & Runtime
+# ======================
 *.log
 rat_detector.log
+sonic_detector.log
 alerts.txt
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Model weights & large assets
+# ======================
+# Model Weights
+# ======================
 models/
 *.pt
 *.onnx
 *.engine
+*.tflite
+*.weights
 
-# Output / generated analysis
+# ======================
+# Output & Generated
+# ======================
 analysis/
 detections/
 runs/
+outputs/
+*.session.json
 
-# OS / Editor clutter
+# ======================
+# OS Artifacts
+# ======================
 .DS_Store
 Thumbs.db
-*.swp
-.vscode/
+desktop.ini
 
-# Archive & binary dumps
+# ======================
+# Archives & Binaries
+# ======================
 *.zip
 *.tar
 *.gz
 *.xz
+*.7z
+*.rar
+
+# ======================
+# Documentation Build
+# ======================
+site/
+_build/
+docs/_build/
+
+# ======================
+# Jupyter Notebooks
+# ======================
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ======================
+# Security
+# ======================
+*.pem
+*.key
+.env.local
+.env.*.local
+secrets.json

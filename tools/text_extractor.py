@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
+"""Text extraction utilities with CLI for PDFs and common text files."""
+
 import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Iterable, List, Tuple
+
+__all__ = [
+    "extract_from_file",
+    "discover_files",
+    "summarize_text",
+    "extract_batch",
+    "main",
+]
 
 
 def read_text_file(path: Path) -> str:
@@ -78,7 +89,7 @@ def extract_from_file(path: Path, max_pages: int | None) -> dict:
     return {"meta": meta, "text": text}
 
 
-def discover_files(paths: list[Path]) -> list[Path]:
+def discover_files(paths: Iterable[Path]) -> list[Path]:
     results: list[Path] = []
     for p in paths:
         if p.is_file():
@@ -95,6 +106,56 @@ def summarize_text(text: str, max_chars: int = 1200) -> str:
     return t[:max_chars]
 
 
+def extract_batch(
+    paths: List[Path],
+    out_dir: Path,
+    glob: str | None = None,
+    max_pages: int | None = None,
+) -> Tuple[int, Path]:
+    """Extract a batch of files and return count and index path."""
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    all_files = discover_files(paths)
+    if glob:
+        all_files = [f for f in all_files if f.match(glob)]
+
+    processed = []
+    for f in all_files:
+        if f.name.startswith("."):
+            continue
+        res = extract_from_file(f, max_pages)
+        meta = res["meta"]
+        text = res["text"]
+
+        rel = f.relative_to(paths[0] if len(paths) == 1 else Path.cwd())
+        safe_rel = str(rel).replace("/", "__").replace("\\", "__")
+        base_name = safe_rel.rsplit(".", 1)[0] if "." in safe_rel else safe_rel
+        target_txt = out_dir / f"{base_name}.txt"
+        target_meta = out_dir / f"{base_name}.json"
+
+        if text:
+            target_txt.parent.mkdir(parents=True, exist_ok=True)
+            target_txt.write_text(text, encoding="utf-8")
+        target_meta.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        preview = summarize_text(text)
+        processed.append(
+            {
+                "path": meta["path"],
+                "type": meta["type"],
+                "chars": meta["chars"],
+                "empty": meta["empty"],
+                "note": meta.get("note"),
+                "preview": preview,
+            }
+        )
+
+    index = {"total": len(processed), "generated_at": str(Path.cwd()), "items": processed}
+    index_path = out_dir / "index.json"
+    index_path.write_text(json.dumps(index, indent=2, ensure_ascii=False), encoding="utf-8")
+    return len(processed), index_path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Extract text from PDFs and common text files.")
     parser.add_argument("--paths", nargs="*", default=["."], help="Files or folders to scan")
@@ -105,37 +166,9 @@ def main() -> int:
 
     base_paths = [Path(p).resolve() for p in args.paths]
     out_dir = Path(args.out).resolve()
-    out_dir.mkdir(parents=True, exist_ok=True)
 
-    all_files = discover_files(base_paths)
-    if args.glob:
-        all_files = [f for f in all_files if f.match(args.glob)]
-
-    processed = []
-    for f in all_files:
-        if f.name.startswith("."):
-            continue
-        res = extract_from_file(f, args.max_pages)
-        meta = res["meta"]
-        text = res["text"]
-
-        rel = f.relative_to(base_paths[0] if len(base_paths) == 1 else Path.cwd())
-        safe_rel = str(rel).replace("/", "__").replace("\\", "__")
-        target_txt = out_dir / f"{safe_rel}.txt"
-        target_meta = out_dir / f"{safe_rel}.json"
-
-        if text:
-            target_txt.parent.mkdir(parents=True, exist_ok=True)
-            target_txt.write_text(text, encoding="utf-8")
-        target_meta.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
-
-        preview = summarize_text(text)
-        processed.append({"path": meta["path"], "type": meta["type"], "chars": meta["chars"], "empty": meta["empty"], "note": meta.get("note"), "preview": preview})
-
-    index = {"total": len(processed), "generated_at": str(Path.cwd()), "items": processed}
-    (out_dir / "index.json").write_text(json.dumps(index, indent=2, ensure_ascii=False), encoding="utf-8")
-
-    print(f"Processed {len(processed)} files. Output: {out_dir}")
+    count, index_path = extract_batch(base_paths, out_dir, glob=args.glob, max_pages=args.max_pages)
+    print(f"Processed {count} files. Index: {index_path}")
     return 0
 
 

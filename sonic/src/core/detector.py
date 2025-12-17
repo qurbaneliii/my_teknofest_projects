@@ -6,11 +6,6 @@ from datetime import datetime
 from typing import List
 import numpy as np
 
-try:
-    from ultralytics import YOLO
-except ImportError as e:
-    raise ImportError("ultralytics not installed. Run: pip install ultralytics") from e
-
 from .models import Detection
 
 logger = logging.getLogger(__name__)
@@ -24,6 +19,7 @@ class Detector:
         model_path: str | Path = "models/best.pt",
         class_name: str = "mouse",
         confidence_threshold: float = 0.7,
+        allow_missing_model: bool = False,
     ):
         """Initialize detector with model and thresholds.
         
@@ -32,14 +28,28 @@ class Detector:
             class_name: Target class to detect (e.g., "mouse", "rat")
             confidence_threshold: Minimum confidence for valid detections
         """
+        try:
+            from ultralytics import YOLO  # type: ignore
+        except ImportError:
+            if allow_missing_model:
+                logger.warning("ultralytics not installed; running detector in dry-run mode")
+                YOLO = None  # type: ignore
+            else:
+                raise ImportError("ultralytics not installed. Run: pip install ultralytics")
+
         self.model_path = Path(model_path)
         if not self.model_path.exists():
-            raise FileNotFoundError(f"Model weights not found: {self.model_path}")
-        
-        self.model = YOLO(str(self.model_path))
+            if allow_missing_model:
+                logger.warning(f"Model weights not found: {self.model_path}; running in dry-run mode")
+                self.model = None
+            else:
+                raise FileNotFoundError(f"Model weights not found: {self.model_path}")
+        else:
+            self.model = YOLO(str(self.model_path)) if YOLO else None
         self.class_name = class_name
         self.confidence_threshold = confidence_threshold
-        logger.info(f"Loaded model from {self.model_path}, target class: {class_name}")
+        if self.model:
+            logger.info(f"Loaded model from {self.model_path}, target class: {class_name}")
 
     def detect(self, frame: np.ndarray, frame_id: int) -> List[Detection]:
         """Run inference on a single frame and return filtered detections.
@@ -51,6 +61,9 @@ class Detector:
         Returns:
             List of Detection objects above confidence threshold
         """
+        if self.model is None:
+            return []
+
         try:
             results = self.model(frame, verbose=False)
         except Exception as e:
