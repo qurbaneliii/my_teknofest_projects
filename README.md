@@ -1,124 +1,228 @@
-# TEKNOFEST Field Projects
-Applied AI, robotics, and sustainability prototypes prepared for TEKNOFEST submissions.
+# TEKNOFEST AI Projects
 
-**Project READMEs**
-- SONIC: `sonic/README.md`
-- AgroScan: `agroscan/docs/agroscan_pitch.md`
+[![CI](https://github.com/qurbaneliii/my_teknofest_projects/actions/workflows/ci.yml/badge.svg)](https://github.com/qurbaneliii/my_teknofest_projects/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**Docs Site (MkDocs)**
-- Run locally: `pip install -e .[docs] && mkdocs serve`
-- GitHub Pages ready via `site/` on publish
+Applied AI systems for agricultural monitoring and sustainable farming, developed for TEKNOFEST competitions.
 
----
+## 🚀 Quick Links
 
-## Project Snapshot
-| Project | What it tackles | Key assets (repo paths) | Status |
-| --- | --- | --- | --- |
-| SONIC | Smart pest mitigation that pairs drone scouting, ultrasonic deterrents, and on-edge vision | Modular detector: `sonic/src/{core,alerts,visualization}`, CLI: `sonic/src/cli.py`, Assets: `sonic/assets/` | Production-ready v0.2 |
-| AgroScan | Drone-based crop-health analytics with NDVI-style insights and mission planning | `agroscan/docs/agroscan_pitch.pdf` | Concept validation |
-| Future entries | Additional TEKNOFEST concepts (aerial autonomy, smart irrigation, carbon monitoring) | Placeholder | Scoping |
+| Resource | Link |
+|----------|------|
+| **SONIC Docs** | [sonic/README.md](sonic/README.md) |
+| **AgroScan Docs** | [agroscan/docs/agroscan_pitch.md](agroscan/docs/agroscan_pitch.md) |
+| **API Docs** | Run locally: `uvicorn app:app` → http://localhost:8000/docs |
+| **MkDocs Site** | `pip install -e .[docs] && mkdocs serve` |
 
 ---
 
-## SONIC · Smart Rodent Intelligence & Control
-SONIC combines YOLOv8-based detection with modular tracking, configurable alerts, and farmer-facing interfaces to keep storage silos and fields rodent-free without chemical interventions.
+## 📊 Project Overview
 
-**Architecture (v0.2 - Refactored)**
-- **Core Detection**: `sonic/src/core/` - Detector, Tracker, and data models (Detection, Track)
-- **Alert System**: `sonic/src/alerts/` - Pluggable handlers (console, file, log)
-- **Visualization**: `sonic/src/visualization/` - OpenCV overlay rendering
-- **Configuration**: `sonic/src/config.py` - Type-safe config management with JSON schema
-- **CLI**: `sonic/src/cli.py` - Main entry point with video/image/camera modes
+| Project | Description | Key Features | Status |
+|---------|-------------|--------------|--------|
+| **SONIC** | Smart rodent detection & control | YOLOv8 detection, Kalman tracking, configurable alerts | ✅ v0.3.0 |
+| **AgroScan** | Drone-based crop health analytics | NDVI/SAVI computation, stress classification, Streamlit demo | ✅ v0.3.0 |
 
-**Assets**
-- Pitch decks: `sonic/assets/docs/{sonic_pitch_en.pdf, sonic_pitch_az.pdf, sonic_2023_evaluation.pdf}`
-- UI mockups: `sonic/assets/mockups/{sonic_app.html, sonic_website.html}`
-- Dataset: `sonic/assets/dataset/{field_captures/, sample_images/}`
+---
 
-**Quickstart**
+## 🛠️ Installation
+
 ```bash
-# Install
-pip install -e .  # or: pip install -r requirements.txt
+# Clone repository
+git clone https://github.com/qurbaneliii/my_teknofest_projects.git
+cd my_teknofest_projects
 
-# Setup config
-cp sonic/config.example.json config.json
-# Edit config.json to point to your model weights
+# Install base package
+pip install -e .
 
+# Install with all extras (dev, docs, demo, api)
+pip install -e .[all]
+```
+
+### Docker Deployment
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Access:
+# - API: http://localhost:8000/docs
+# - SONIC Demo: http://localhost:8501
+# - AgroScan Demo: http://localhost:8502
+# - Docs: http://localhost:8080
+```
+
+---
+
+## 🐀 SONIC · Smart Rodent Intelligence & Control
+
+AI-powered pest detection combining YOLOv8 vision with modular tracking and configurable alert systems.
+
+### Architecture
+
+```
+sonic/src/
+├── core/           # Detector, Tracker, KalmanTracker, models
+├── alerts/         # Pluggable handlers (console, file, log)
+├── visualization/  # OpenCV overlay rendering
+├── config.py       # Type-safe Pydantic configuration
+└── cli.py          # Main CLI entry point
+```
+
+### Usage
+
+```bash
 # Run detection
-python -m sonic.src.cli --camera              # Live camera
-python -m sonic.src.cli --video input.mp4     # Video file
-python -m sonic.src.cli --image frame.jpg     # Single image
+sonic-detect --camera                    # Live camera
+sonic-detect --video input.mp4           # Video file
+sonic-detect --image frame.jpg           # Single image
+
+# With Kalman tracking
+sonic-detect --video input.mp4 --config config.json
+# config.json: {"tracker_type": "kalman"}
 ```
 
-**Development**
+### Demo
+
 ```bash
-pip install -r requirements-dev.txt
-pytest                    # Run tests
-ruff check sonic/         # Lint
-black sonic/              # Format
+pip install -e .[demo]
+streamlit run sonic/demo/app.py
 ```
 
 ---
 
-## AgroScan · Precision Crop Intelligence
-AgroScan focuses on affordable aerial scouting. The current assets capture the mission narrative, KPIs, and deployment plan while code and datasets are being curated for release.
+## 🌾 AgroScan · Precision Crop Intelligence
 
-- `agroscan/AgroScan proje sunumu.pdf` outlines the drone platform, orthomosaic workflow, and data-to-advice pipeline
-- Planned deliverables: dataset schemas, preprocessing notebooks, and an inference service for fast vegetation indexing
-- Near-term work: port NDVI and stress classification notebooks, publish bill of materials, and document field test protocol
+Vegetation index computation and crop stress analysis for precision agriculture.
+
+### Features
+
+- **NDVI/SAVI/EVI** vegetation index computation
+- **Stress classification** with configurable thresholds
+- **Synthetic data generation** for testing
+- **Streamlit demo** for interactive analysis
+
+### Usage
+
+```bash
+# CLI commands
+agroscan ndvi --red red.png --nir nir.png --output ndvi.png
+agroscan stress --red red.png --nir nir.png --output stress.png
+agroscan generate-samples --output-dir samples/
+
+# Demo
+streamlit run agroscan/demo/app.py
+```
+
+### Python API
+
+```python
+from agroscan.src import compute_ndvi, classify_stress, compute_stress_statistics
+
+ndvi = compute_ndvi(nir_band, red_band)
+stress = classify_stress(ndvi)
+stats = compute_stress_statistics(stress)
+print(f"Healthy: {stats['healthy']:.1f}%")
+```
 
 ---
 
-## Repository Layout
+## 🔌 REST API
+
+FastAPI service for programmatic access to detection and analysis.
+
+```bash
+# Start API
+uvicorn app:app --host 0.0.0.0 --port 8000
+
+# Or via Docker
+docker-compose up api
+```
+
+### Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/api/v1/detect` | POST | Detect rodents in image |
+| `/api/v1/ndvi` | POST | Compute NDVI + stress statistics |
+| `/api/v1/ndvi/image` | POST | Generate NDVI/stress map image |
+| `/api/v1/savi` | POST | Compute SAVI index |
+
+---
+
+## 🧪 Development
+
+```bash
+# Install dev dependencies
+pip install -e .[dev]
+
+# Run tests
+pytest --cov=sonic --cov=agroscan
+
+# Lint & format
+ruff check .
+black .
+mypy sonic/src agroscan/src
+
+# Build docs
+mkdocs serve
+```
+
+---
+
+## 📁 Repository Structure
+
 ```
 my_teknofest_projects/
-├── README.md
-├── requirements.txt
-├── requirements-dev.txt
-├── pyproject.toml
-├── .gitignore
-├── tests/
-│   ├── conftest.py
-│   ├── test_detector.py
-│   ├── test_tracker.py
-│   └── test_alerts.py
-├── tools/
-│   ├── text_extractor.py
-│   └── README.md
-├── agroscan/
-│   └── docs/
-│       └── agroscan_pitch.pdf
-└── sonic/
-    ├── config.example.json
-    ├── src/
-    │   ├── core/           (Detector, Tracker, models)
-    │   ├── alerts/         (AlertHandler interface + implementations)
-    │   ├── visualization/  (OverlayRenderer)
-    │   ├── config.py
-    │   └── cli.py
-    └── assets/
-        ├── docs/           (pitch decks, evaluation reports)
-        ├── mockups/        (HTML prototypes)
-        └── dataset/        (field captures, sample images)
+├── sonic/                  # SONIC detection package
+│   ├── src/                # Core modules
+│   ├── demo/               # Streamlit demo
+│   └── assets/             # Docs, mockups, dataset
+├── agroscan/               # AgroScan analytics package
+│   ├── src/                # NDVI, stress, preprocessing
+│   ├── demo/               # Streamlit demo
+│   └── notebooks/          # Jupyter notebooks
+├── app/                    # FastAPI service
+├── tools/                  # Utilities (text_extractor)
+├── tests/                  # Pytest test suite
+├── docs/                   # MkDocs documentation
+├── Dockerfile              # Multi-stage Docker build
+├── docker-compose.yml      # Service orchestration
+└── pyproject.toml          # Package configuration
 ```
 
 ---
 
-## Roadmap
-- [x] Modularize detector into core/alerts/visualization components
-- [x] Add comprehensive test suite (pytest + fixtures)
-- [x] Implement proper configuration management
-- [x] Reorganize assets with semantic naming
-- [ ] Publish SONIC hardware integration notes (ultrasonic array, drone payload specs)
-- [ ] Add AgroScan preprocessing notebooks + sample orthomosaic tiles
-- [ ] Deploy containerized inference service (Docker + FastAPI)
-- [ ] CI/CD pipeline with automated testing
+## ✅ Roadmap
+
+- [x] Modular architecture (core/alerts/visualization)
+- [x] Comprehensive test suite (pytest + fixtures)
+- [x] Pydantic configuration management
+- [x] Kalman filter tracking with Hungarian algorithm
+- [x] AgroScan NDVI/stress module
+- [x] FastAPI REST service
+- [x] Docker containerization
+- [x] CI/CD with GitHub Actions
+- [ ] Hardware integration notes (ultrasonic array, drone specs)
+- [ ] GeoTIFF support for real orthomosaic tiles
+- [ ] Model quantization for edge deployment
+- [ ] Time-series crop monitoring
 
 ---
 
-## Collaboration & Contact
-- Email: qurbanelifeyzullayev@gmail.com
-- LinkedIn: https://linkedin.com/in/gurbanalifeyzullayev/
+## 📬 Contact & Collaboration
 
-I’m always open to technical feedback, data partnerships, or field-test collaborations around sustainable agriculture and applied AI.
+- **Email**: qurbanelifeyzullayev@gmail.com
+- **LinkedIn**: [linkedin.com/in/gurbanalifeyzullayev](https://linkedin.com/in/gurbanalifeyzullayev/)
+
+Open to technical feedback, data partnerships, and field-test collaborations around sustainable agriculture and applied AI.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
 

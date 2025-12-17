@@ -1,0 +1,93 @@
+# TEKNOFEST AI Services - Docker Compose Configuration
+# Supports development, testing, and production environments
+
+version: "3.9"
+
+services:
+  # ============== API Service ==============
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: teknofest-api:latest
+    container_name: teknofest-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./models:/app/models:ro  # Mount model weights
+      - ./outputs:/app/outputs   # Persist outputs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # ============== SONIC Streamlit Demo ==============
+  sonic-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: teknofest-demo:latest
+    container_name: sonic-demo
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "sonic/demo/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    volumes:
+      - ./sonic:/app/sonic
+      - ./models:/app/models:ro
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ============== AgroScan Streamlit Demo ==============
+  agroscan-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: teknofest-demo:latest
+    container_name: agroscan-demo
+    ports:
+      - "8502:8502"
+    command: ["streamlit", "run", "agroscan/demo/app.py", "--server.port=8502", "--server.address=0.0.0.0"]
+    volumes:
+      - ./agroscan:/app/agroscan
+    environment:
+      - STREAMLIT_SERVER_HEADLESS=true
+    restart: unless-stopped
+
+  # ============== Documentation Server ==============
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: teknofest-docs:latest
+    container_name: teknofest-docs
+    ports:
+      - "8080:8080"
+    command: ["mkdocs", "serve", "--dev-addr=0.0.0.0:8080"]
+    volumes:
+      - ./docs:/app/docs:ro
+      - ./mkdocs.yml:/app/mkdocs.yml:ro
+    restart: unless-stopped
+
+# ============== Development Override ==============
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+networks:
+  default:
+    name: teknofest-network
+
+volumes:
+  model-cache:
+    driver: local

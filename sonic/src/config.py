@@ -23,6 +23,9 @@ class DetectorConfig:
     # Tracking parameters
     track_distance_threshold: float = 120.0
     max_track_age: int = 30
+    tracker_type: str = "simple"  # "simple" or "kalman"
+    kalman_iou_threshold: float = 0.3
+    kalman_min_hits: int = 3
     
     # Alert parameters
     alert_cooldown: float = 5.0
@@ -93,6 +96,9 @@ class DetectorConfig:
             target_class: str = Field(default="mouse", min_length=1)
             track_distance_threshold: float = Field(default=120.0, gt=0)
             max_track_age: int = Field(default=30, gt=0)
+            tracker_type: str = Field(default="simple", pattern=r"^(simple|kalman)$")
+            kalman_iou_threshold: float = Field(default=0.3, ge=0, le=1)
+            kalman_min_hits: int = Field(default=3, ge=1)
             alert_cooldown: float = Field(default=5.0, ge=0)
             enable_console_alerts: bool = True
             enable_file_alerts: bool = True

@@ -123,14 +123,25 @@ class WebhookAlert(AlertHandler):
 ```
 
 ### Custom Tracking
-Replace `Tracker` with Hungarian algorithm or Kalman filter:
+Kalman filter tracker with Hungarian algorithm is now available:
 ```python
-from sonic.src.core.tracker import Tracker
+from sonic.src.core.kalman_tracker import KalmanTracker
 
-class KalmanTracker(Tracker):
-    def update(self, detections, frame_id):
-        # Custom tracking logic
-        pass
+tracker = KalmanTracker(
+    max_age=30,
+    min_hits=3,
+    iou_threshold=0.3,
+)
+tracks = tracker.update(detections)
+```
+
+Enable via configuration:
+```json
+{
+    "tracker_type": "kalman",
+    "kalman_iou_threshold": 0.3,
+    "kalman_min_hits": 3
+}
 ```
 
 ### Custom Visualizations
@@ -146,12 +157,64 @@ class HeatmapRenderer(OverlayRenderer):
 ## Performance Considerations
 
 - **Inference**: YOLOv8 is GPU-accelerated when available
-- **Tracking**: O(N*M) nearest-neighbor; consider spatial indexing for >50 objects
+- **Tracking**: Kalman tracker uses Hungarian algorithm O(N³) for optimal assignment
 - **Alerts**: Cooldown prevents spam; file I/O is non-blocking
+
+## AgroScan Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    AgroScan Pipeline                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Multispectral Input    →    Vegetation Index    →   Output │
+│  (Red, NIR, Blue)            Computation              Maps   │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │                   agroscan.src                          │ │
+│  │  ┌─────────────┐  ┌───────────┐  ┌──────────────────┐  │ │
+│  │  │preprocessing│  │   ndvi    │  │     stress       │  │ │
+│  │  │             │  │           │  │                  │  │ │
+│  │  │load_bands() │──│compute_   │──│classify_stress() │  │ │
+│  │  │normalize()  │  │ndvi/savi/ │  │stress_to_rgb()   │  │ │
+│  │  │             │  │evi/ndwi   │  │compute_stats()   │  │ │
+│  │  └─────────────┘  └───────────┘  └──────────────────┘  │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  Entry Points:                                               │
+│  • CLI: agroscan ndvi --red r.png --nir n.png               │
+│  • CLI: agroscan stress --red r.png --nir n.png             │
+│  • API: POST /api/v1/ndvi                                    │
+│  • Demo: streamlit run agroscan/demo/app.py                  │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Vegetation Indices
+
+| Index | Formula | Use Case |
+|-------|---------|----------|
+| NDVI | (NIR-R)/(NIR+R) | General vegetation health |
+| SAVI | ((NIR-R)/(NIR+R+L))*(1+L) | Sparse vegetation, soil correction |
+| EVI | G*(NIR-R)/(NIR+C1*R-C2*B+L) | High biomass, atmospheric correction |
+| NDWI | (NIR-SWIR)/(NIR+SWIR) | Water content in vegetation |
+
+### Stress Classification
+
+```
+NDVI Value    →    Stress Level    →    Color
+≥ 0.6              Healthy              Green
+0.4 - 0.6          Mild Stress          Yellow-Green
+0.25 - 0.4         Moderate Stress      Gold
+0.1 - 0.25         Severe Stress        Orange
+0 - 0.1            Critical             Red
+< 0                No Vegetation        Brown
+```
 
 ## Future Improvements
 
 - Async video processing (multi-threading for I/O)
-- Spatial indexing (KD-tree) for tracking
-- Hungarian algorithm for better multi-object association
+- Spatial indexing (KD-tree) for tracking  
 - Model quantization for edge deployment
+- GeoTIFF support for real orthomosaic tiles
+- Time-series analysis for crop monitoring

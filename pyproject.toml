@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "my-teknofest-projects"
-version = "0.2.0"
+version = "0.3.0"
 description = "AI-powered agricultural monitoring systems for TEKNOFEST"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,13 +12,16 @@ license = {text = "MIT"}
 authors = [
     {name = "Qurbanəli Feyzullayev", email = "qurbanelifeyzullayev@gmail.com"},
 ]
-keywords = ["ai", "agriculture", "detection", "teknofest", "yolo"]
+keywords = ["ai", "agriculture", "detection", "teknofest", "yolo", "ndvi", "crop-health"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Processing",
 ]
 
 dependencies = [
@@ -29,6 +32,8 @@ dependencies = [
     "pdfminer.six>=20240706",
     "pydantic>=2.7.0",
     "click>=8.1.7",
+    "scipy>=1.11.0",
+    "pillow>=10.2.0",
 ]
 
 [project.optional-dependencies]
@@ -41,6 +46,7 @@ dev = [
     "black>=23.11.0",
     "pre-commit>=3.5.0",
     "types-PyYAML",
+    "httpx>=0.25.0",
 ]
 docs = [
     "mkdocs>=1.5.3",
@@ -52,17 +58,26 @@ demo = [
     "streamlit>=1.29.0",
     "gradio>=4.12.0",
 ]
+api = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "python-multipart>=0.0.6",
+]
+all = [
+    "my-teknofest-projects[dev,docs,demo,api]",
+]
 
 [project.scripts]
 sonic-detect = "sonic.src.cli:main"
 extract-text = "tools.text_extractor:main"
+agroscan = "agroscan.src.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["sonic*", "tools*"]
+include = ["sonic*", "agroscan*", "tools*", "app*"]
 
 [tool.ruff]
 line-length = 100
