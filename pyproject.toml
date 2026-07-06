@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "Qurbanəli Feyzullayev", email = "qurbanelifeyzullayev@gmail.com"},
+    {name = "Gurbanali Feyzullayev", email = "qurbanelifeyzullayev@gmail.com"},
 ]
 keywords = ["ai", "agriculture", "detection", "teknofest", "yolo", "ndvi", "crop-health"]
 classifiers = [
